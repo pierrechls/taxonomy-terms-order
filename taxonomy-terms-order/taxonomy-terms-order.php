@@ -172,7 +172,7 @@ Domain Path: /languages/
             $taxonomy = stripslashes($_POST['taxonomy']);
             $data = stripslashes($_POST['order']);
             $unserialised_data = unserialize($data);
-                    
+            $term_ids = array();
             if (is_array($unserialised_data))
             foreach($unserialised_data as $key => $values ) 
                 {
@@ -188,10 +188,13 @@ Domain Path: /languages/
                     foreach( $items as $item_key => $term_id ) 
                         {
                             $wpdb->update( $wpdb->terms, array('term_order' => ($item_key + 1)), array('term_id' => $term_id) );
+			    $term_ids[] = (int) $term_id;
                         } 
                 }
                 
-                
+            if ( ! empty( $tem_ids ) ) {
+		    clean_term_cache( $term_ids );
+	    }
             die();
         }
 
